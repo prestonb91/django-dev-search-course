@@ -51,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'devsearch.urls'
+ROOT_URLCONF = 'dev-search.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'devsearch.wsgi.application'
+WSGI_APPLICATION = 'dev-search.wsgi.application'
 
 
 # Database
