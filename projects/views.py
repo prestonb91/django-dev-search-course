@@ -1,11 +1,12 @@
+# Render import renders templates. 
 from django.shortcuts import render
-from django.urls import HttpResponse
+from django.http import HttpResponse
 
 # Create your views here.
 
 # Projects function called on access to projects/
 def projects(request): 
-    return HttpResponse('Here are our products')
+    return render(request, 'projects.html')
 
 # pk value being called as parameter from project url
 def project(request, pk): 
