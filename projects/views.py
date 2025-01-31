@@ -6,8 +6,9 @@ from django.http import HttpResponse
 
 # Projects function called on access to projects/
 def projects(request): 
-    return render(request, 'projects.html')
+    msg = 'Hello, you are on the projects page.'
+    return render(request, 'projects/projects.html', {'msg': msg})
 
 # pk value being called as parameter from project url
-def project(request, pk): 
-    return HttpResponse('SINGLE PROJECT' + ' ' + pk)
+def project(request, id): 
+    return render(request, 'projects/single-project.html')
