@@ -1,0 +1,16 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<h1>Project Form</h1>
+
+<form method="POST">
+    <!-- cross-site request forgery token protects from csrf attacks.  -->
+    {% csrf_token %}
+    <!-- as_p wraps paragraph tags around each field -->
+    <!-- .label displays title of attribute -->
+    {{form.as_p}}
+    <input type="submit">
+</form>
+
+{% endblock %}

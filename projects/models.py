@@ -1,7 +1,10 @@
 from django.db import models
+
 import uuid
 
 # Create your models here.
+
+
 
 # By default in Django, inheriting models automatically applies id. 
 class Project(models.Model):
