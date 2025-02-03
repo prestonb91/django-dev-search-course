@@ -1,9 +1,5 @@
 {% extends 'main.html' %}
 
-{% block content %}
-
-<h1>Project Form</h1>
-
 <!-- "multipart/form-data" enables form to send file data (imgs). -->
 <form action="" method="POST" enctype="multipart/form-data">
     <!-- cross-site request forgery token protects from csrf attacks.  -->
@@ -13,5 +9,33 @@
     {{projectForm.as_p}}
     <input type="submit">
 </form>
+
+{% block content %}
+
+<!-- Main Section -->
+<main class="formPage my-xl">
+    <div class="content-box">
+        <div class="formWrapper">
+            <a class="backButton" href="#"><i class="im im-angle-left"></i></a>
+            <br>
+
+            <!-- "multipart/form-data" enables form to send file data (imgs). -->
+            <form class="form" method="POST" enctype="multipart/form-data">
+                <!-- cross-site request forgery token protects from csrf attacks.  -->
+                {% csrf_token %}
+
+                {% for field in projectForm%}
+                <!-- Input:Text -->
+                <div class="form__field">
+                    <label for="formInput#text">{{field.label}}</label>
+                    {{field}}
+                </div>
+                {% endfor %}
+
+                <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
+            </form>
+        </div>
+    </div>
+</main>
 
 {% endblock %}
