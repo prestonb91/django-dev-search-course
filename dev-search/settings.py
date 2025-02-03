@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-u-959gr!bo0+9uszm*0zm-%d0l4e(mhr&t(m&n-19c5vcq=ual
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Set domains that are allowed to access the website. 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -50,6 +51,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # whitenoise middleware to allow for static files to be served
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'dev-search.urls'
@@ -121,7 +126,19 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+MEDIA_URL = '/images/'
+
+# Tells django where to put user uploaded media content.
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
+# Static files cannot be served in production and becomes unaccessible when debug turned off. 
+# Static root defines where static files in production will be. 
+# Running "python3 manage.py collectstatic" runs a Django function to automatically create a staticfiles folder.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

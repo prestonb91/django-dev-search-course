@@ -12,6 +12,8 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     # null=True means this data can be created without an initial value. 
     description = models.TextField(null=True, blank=True)
+    # Django automatically picks up "default.jpg" if folder structure follows convention of static/images/file_name.
+    featured_image = models.ImageField(null=True, blank=True, default="default.jpg")
     # Blank true means allowed to submit a form with value being empty. 
     demo_link = models.CharField(max_length=2000, null=True, blank=True)
     source_link = models.CharField(max_length=2000, null=True, blank=True)

@@ -4,12 +4,13 @@
 
 <h1>Project Form</h1>
 
-<form method="POST">
+<!-- "multipart/form-data" enables form to send file data (imgs). -->
+<form action="" method="POST" enctype="multipart/form-data">
     <!-- cross-site request forgery token protects from csrf attacks.  -->
     {% csrf_token %}
     <!-- as_p wraps paragraph tags around each field -->
     <!-- .label displays title of attribute -->
-    {{form.as_p}}
+    {{projectForm.as_p}}
     <input type="submit">
 </form>
 
