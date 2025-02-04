@@ -15,7 +15,6 @@ def projects(request):
 # id value being called as parameter from project url.
 def project(request, pk): 
     projectObj = Project.objects.get(id=pk)
-    tags = projectObj.tags.all()
     context = { 'project': projectObj }
     return render(request, 'projects/single-project.html', context)
 
