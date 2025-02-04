@@ -1,5 +1,5 @@
 from django.db import models
-
+from users.models import Profile
 import uuid
 
 # Create your models here.
@@ -8,6 +8,9 @@ import uuid
 
 # By default in Django, inheriting models automatically applies id. 
 class Project(models.Model):
+    # Projects to user is many to one relationship, use foreign key to get them to communicate with each other.
+    # Won't let migration run unless have null=True.
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
     # Title by default will be required. 
     title = models.CharField(max_length=200)
     # null=True means this data can be created without an initial value. 
