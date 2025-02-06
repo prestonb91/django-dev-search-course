@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Project
 from .forms import ProjectForm
+# Checks to see if someone is logged in before action.
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -19,6 +21,8 @@ def project(request, pk):
     return render(request, 'projects/single-project.html', context)
 
 # Takes in POST request from 'project_form.html'
+# If they are not logged in, redirects them to login page. 
+@login_required(login_url="login")
 def createProject(request):
     projectForm = ProjectForm()
 
@@ -36,6 +40,7 @@ def createProject(request):
     return render(request, 'projects/project_form.html', context)
 
 # Form request to update a project.
+@login_required(login_url="login")
 def updateProject(request, pk):
     # Gets project that has same id as pk. 
     project = Project.objects.get(id=pk)
@@ -52,6 +57,7 @@ def updateProject(request, pk):
     context = {'projectForm': projectForm}
     return render(request, 'projects/project_form.html', context)
 
+@login_required(login_url="login")
 def deleteProject(request, pk):
     project = Project.objects.get(id=pk)
     if request.method == 'POST':

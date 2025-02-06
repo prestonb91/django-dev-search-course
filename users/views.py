@@ -1,7 +1,50 @@
-from django.shortcuts import render
-from .models import Profile 
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from .models import Profile
+from django.contrib.auth.models import User
+from django.contrib import messages
+
 
 # Create your views here.
+
+def loginUser(request):
+
+    # Prevents accessing the login page if user is logged in and redirects to profiles page. 
+    if request.user.is_authenticated:
+        return redirect('profiles')
+
+    if request.method == "POST":
+        # Extract form fields. 
+        username = request.POST['username']
+        password = request.POST['password']
+
+        try:
+            # Checking if user exists in the database. 
+            user = User.objects.get(username=username)
+        except:
+            # If user does not exist, print out flash message. 
+            messages.error(request, 'Username does not exist')
+
+        # If checks pass, authenticate function. Authenticate will take user and password to see if matches, then return user instance or none. 
+        user = authenticate(request, username=username, password=password)
+
+        # If user does exist, then log user in.
+        if user is not None:
+            # Login function creates a session for that user in the database. Adds cookie. 
+            login(request, user)
+            return redirect('profiles')
+        else:
+            messages.error(request, 'Username OR password is incorrect')
+
+    return render(request, 'users/login_register.html')
+
+def logoutUser(request):
+    # Logs user out and deletes their session.
+    logout(request)
+    messages.error(request, 'User was logged out')
+    return redirect('login')
+
 def profiles(request):
     profiles = Profile.objects.all()
     context = { 'profiles': profiles }

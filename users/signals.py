@@ -9,7 +9,6 @@ from .models import Profile
 # Sender is the model that sends this, instance is the instance of the object that triggers, created lets us know true or false if a new record was added or not. 
 # This now creates a profile once a user is created. 
 def createProfile(sender, instance, created, ** kwargs):
-    print('Profile signal triggered')
     if created:
         user = instance
         # Create a profile.
@@ -17,7 +16,6 @@ def createProfile(sender, instance, created, ** kwargs):
             user=user,
             username=user.username,
             email=user.email,
-            name=user.first_name
         )
 
 # Without this, when profile gets deleted, user stays. 
@@ -26,8 +24,7 @@ def deleteUser(sender, instance, **kwargs):
     user = instance.user
     user.delete()
 
-# Anytime the save method is called on Profile, this method is triggered. 
+# # Anytime the save method is called on Profile, this method is triggered. 
 post_save.connect(createProfile, User)
-
-# Anytime a user is deleted, this method is triggered
-post_delete.connect(deleteUser, Profile)
+# # Anytime a user is deleted, this method is triggered
+post_delete.connect(deleteUser, Profile) 
