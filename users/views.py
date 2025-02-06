@@ -4,11 +4,14 @@ from django.contrib.auth.decorators import login_required
 from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib import messages
-
+from django.contrib.auth.forms import UserCreationForm
+from .forms import CustomUserCreationForm
 
 # Create your views here.
 
 def loginUser(request):
+    # Page variable to register conditionally. 
+    page = 'login'
 
     # Prevents accessing the login page if user is logged in and redirects to profiles page. 
     if request.user.is_authenticated:
@@ -44,6 +47,34 @@ def logoutUser(request):
     logout(request)
     messages.error(request, 'User was logged out')
     return redirect('login')
+
+def registerUser(request):
+    # Page variable to register conditionally. 
+    page = 'register'
+    form = CustomUserCreationForm()
+
+    if request.method == "POST":
+        # Passes in request.POST data, the username and double password as confirmation.
+        form = CustomUserCreationForm(request.POST)
+        # is_valid method to check if all inputs are valid and no data has been manipulated.
+        if form.is_valid():
+            # Instead of just saving immediately, this holds a temporary instance a user object before processing, if we want to modify.
+            user = form.save(commit=False)
+            # Checks for case sensitivity. 
+            user.username = user.username.lower()
+            user.save()
+
+            messages.success(request, 'User account was created!')
+
+            # Create session based token and add to cookies
+            login(request, user)
+            return redirect('profiles')
+        else:
+            messages.success(request, 'An error has occured during registration')
+    
+
+    context = { 'page': page, 'form': form }
+    return render(request, 'users/login_register.html', context)
 
 def profiles(request):
     profiles = Profile.objects.all()
