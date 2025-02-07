@@ -15,7 +15,7 @@ class ProjectForm(ModelForm):
             # Modifies default tags showing as multi select to check boxes.
             'tags':forms.CheckboxSelectMultiple(),
         }
-    
+
     # Overrides init method. 
     # kwargs == key word argument
     def __init__(self, *args, **kwargs):
