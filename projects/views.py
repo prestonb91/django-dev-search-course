@@ -24,6 +24,9 @@ def project(request, pk):
 # If they are not logged in, redirects them to login page. 
 @login_required(login_url="login")
 def createProject(request):
+    # Grab the logged in profile to specify which profile for project CRUD operations.
+    profile = request.user.profile
+
     projectForm = ProjectForm()
 
     if request.method == 'POST':
@@ -32,7 +35,11 @@ def createProject(request):
         # Django model forms checks if form is valid, if all fields are required. 
         if projectForm.is_valid():
             # form.save() creates and saves the content of the form to the database. 
-            projectForm.save()
+            # Commit=False gives us instance of current project to update the owner attribute. 
+            project = projectForm.save(commit=False)
+            project.owner = profile
+            # Took the logged in user, the project itself, and resaved it in the profile. 
+            project.save()
             # After form is saved, redirects the user to the main projects page. 
             return redirect('projects')
 
@@ -42,8 +49,10 @@ def createProject(request):
 # Form request to update a project.
 @login_required(login_url="login")
 def updateProject(request, pk):
+    profile = request.user.profile
     # Gets project that has same id as pk. 
-    project = Project.objects.get(id=pk)
+    # project_set querying all the projects of that user. 
+    project = profile.project_set.get(id=pk)
     # Takes that project instance and prefills in projectForm variable. 
     projectForm = ProjectForm(instance=project)
 
@@ -59,7 +68,8 @@ def updateProject(request, pk):
 
 @login_required(login_url="login")
 def deleteProject(request, pk):
-    project = Project.objects.get(id=pk)
+    profile = request.user.profile
+    project = profile.profile_set.get(id=pk)
     if request.method == 'POST':
         project.delete()
         return redirect('projects')
