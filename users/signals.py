@@ -8,7 +8,7 @@ from .models import Profile
 # @receiver(post_save, sender=Profile)
 # Sender is the model that sends this, instance is the instance of the object that triggers, created lets us know true or false if a new record was added or not. 
 # This now creates a profile once a user is created. 
-def createProfile(sender, instance, created, ** kwargs):
+def createProfile(sender, instance, created, **kwargs):
     if created:
         user = instance
         # Create a profile.
@@ -24,7 +24,20 @@ def deleteUser(sender, instance, **kwargs):
     user = instance.user
     user.delete()
 
-# # Anytime the save method is called on Profile, this method is triggered. 
-post_save.connect(createProfile, User)
-# # Anytime a user is deleted, this method is triggered
-post_delete.connect(deleteUser, Profile) 
+def updateUser(sender, instance, created, **kwargs):
+    profile = instance
+    # Able to get the user from profile as it is a 1to1 relationship
+    user = profile.user
+    # If first instance of user being created, do not fire this signal since it will go into recursive loop.
+    if created == False:
+        user.first_name = profile.name
+        user.username = profile.username
+        user.email = profile.email
+        user.save()
+
+# Anytime the save method is called on Profile, this method is triggered. 
+post_save.connect(createProfile, sender=User)
+# Anytime the user is updated, triggers the profile to save the user fields.
+post_save.connect(updateUser, sender=Profile)
+# Anytime a user is deleted, this method is triggered
+post_delete.connect(deleteUser, sender=Profile) 
