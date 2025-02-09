@@ -18,8 +18,9 @@ def loginUser(request):
         return redirect('profiles')
 
     if request.method == "POST":
+
         # Extract form fields. 
-        username = request.POST['username']
+        username = request.POST['username'].lower()
         password = request.POST['password']
 
         try:
@@ -45,7 +46,7 @@ def loginUser(request):
 def logoutUser(request):
     # Logs user out and deletes their session.
     logout(request)
-    messages.error(request, 'User was logged out')
+    messages.info(request, 'User was logged out')
     return redirect('login')
 
 def registerUser(request):

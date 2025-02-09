@@ -22,7 +22,7 @@ class ProjectForm(ModelForm):
             # super function takes in ProjectForm (which class to modify), then pass in self, then init.
             super(ProjectForm, self).__init__(*args, **kwargs)
 
-            # Loops through and modifies each field. 
+            # Loops through and modifies each field with a class. 
             # self.fields.items() is a dictionary.
             for name, field in self.fields.items():
                 # Go into each field and customize.

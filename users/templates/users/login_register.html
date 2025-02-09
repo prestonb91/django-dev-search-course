@@ -5,13 +5,8 @@
 {% block content %}
 
 {% if page == 'register' %}
+
 <h1>Register</h1>
-<form method="POST" action="{% url 'register' %}">
-    {% csrf_token%}
-    <!-- Importing in form from registerUser view and style with paragraph -->
-    {{form.as_p}}
-    <input type="submit" value="Register User">
-</form>
 
 <div class="auth">
     <div class="card">
@@ -19,27 +14,35 @@
         <a href="/">
           <img src="{% static 'images/icon.svg' %}" alt="icon" />
         </a>
-        <h3>Account SignUp</h3>
+        <h3>Register an Account</h3>
         <p>Create a new developer account</p>
       </div>
 
-      <form action="#" class="form auth__form">
+      <form method="POST" action="{% url 'register' %}" class="form auth__form">
+      {% csrf_token%}
 
-        <!-- Input:Email -->
-        <div class="form__field">
-          <label for="formInput#email">Email Address: </label>
-          <input
-            class="input input--email"
-            id="formInput#email"
-            type="email"
-            name="email"
-            placeholder="e.g. user@domain.com"
-          />
+      {% for field in form %}
+
+        <div class="form_field">
+            <label for ="formInput#text">{{field.label}}</label>
+                {{field}}
+                <!-- If any help text exists, display on page.  -->
+                <!-- {% if field.help_text %}
+                    <small>{{field.help_text}}</small>
+                {% endif %} -->
+
+                {% for error in field.errors %}
+                    <p style="color: red">{{error}}</p>
+                {% endfor %}
+
         </div>
+
+      {% endfor %}
 
         <div class="auth__actions">
           <input class="btn btn--sub btn--lg" type="submit" value="Sign  In" />
         </div>
+
       </form>
       <div class="auth__alternative">
         <p>Already have an Account?</p>
@@ -62,8 +65,9 @@
         <p>Hello Developer, Welcome Back!</p>
       </div>
 
-      <form action="{% url 'register' %}" method="POST" class="form auth__form">
+      <form action="" method="POST" class="form auth__form">
         {% csrf_token %}
+        
         <!-- Input:User -->
         <div class="form__field">
           <label for="formInput#text">Username: </label>
@@ -87,10 +91,12 @@
             placeholder="••••••••"
           />
         </div>
+
         <div class="auth__actions">
           <input class="btn btn--sub btn--lg" type="submit" value="Log In" />
           <a href="forgetpassword.html">Forget Password?</a>
         </div>
+        
       </form>
       <div class="auth__alternative">
         <p>Don’t have an Account?</p>
