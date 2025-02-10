@@ -2,7 +2,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Project, Tag
-from .forms import ProjectForm
+from .forms import ProjectForm, ReviewForm
 from django.db.models import Q
 # Checks to see if someone is logged in before action.
 from django.contrib.auth.decorators import login_required
@@ -22,7 +22,21 @@ def projects(request):
 # id value being called as parameter from project url.
 def project(request, pk): 
     projectObj = Project.objects.get(id=pk)
-    context = { 'project': projectObj }
+    form = ReviewForm
+
+    # Process the review
+    if request.method == "POST":
+        # Gives the vote and comment
+        form = ReviewForm(request.POST)
+        # Get instance of request before save so can edit instance before saving. 
+        review = form.save(commit=False)
+        review.project = projectObj
+        review.owner = request.user.profile
+        review.save()
+
+        # Update project votecount
+
+    context = { 'project': projectObj, 'form': form }
     return render(request, 'projects/single-project.html', context)
 
 # Takes in POST request from 'project_form.html'

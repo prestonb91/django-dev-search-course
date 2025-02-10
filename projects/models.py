@@ -4,8 +4,6 @@ import uuid
 
 # Create your models here.
 
-
-
 # By default in Django, inheriting models automatically applies id. 
 class Project(models.Model):
     # Projects to user is many to one relationship, use foreign key to get them to communicate with each other.
@@ -45,11 +43,17 @@ class Review(models.Model):
     )
 
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    # owner
+    # One to many relationship
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
     created = models.DateTimeField()
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    class Meta:
+        # Creating a list and set two attributes to bind together. This way, no instance of review can have same owner and same project.
+        # Prevents someone from leaving multiple reviews for same project. 
+        unique_together = [['owner', 'project']]
 
     def __str__(self):
         return self.value
