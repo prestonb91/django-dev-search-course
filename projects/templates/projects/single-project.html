@@ -41,13 +41,14 @@
             </h5>
 
             <form class="form" action="{% url 'project' project.id %}" method="POST">
+              {% csrf_token %}
               {% for field in form %}
               <div class="form__field">
                 <label for="formInput#textarea">{{field.label}}</label>
                 {{field}}
               </div>
               {% endfor %}
-              <input class="btn btn--sub btn--lg" type="submit" value="Comments" />
+              <input class="btn btn--sub btn--lg" type="submit" value="Add Review" />
             </form>
             
             {% for review in project.review_set.all %}

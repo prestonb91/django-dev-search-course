@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Project, Tag
 from .forms import ProjectForm, ReviewForm
+from django.contrib import messages
 from django.db.models import Q
 # Checks to see if someone is logged in before action.
 from django.contrib.auth.decorators import login_required
@@ -22,7 +23,7 @@ def projects(request):
 # id value being called as parameter from project url.
 def project(request, pk): 
     projectObj = Project.objects.get(id=pk)
-    form = ReviewForm
+    form = ReviewForm()
 
     # Process the review
     if request.method == "POST":
@@ -34,7 +35,12 @@ def project(request, pk):
         review.owner = request.user.profile
         review.save()
 
-        # Update project votecount
+        # Update project votecount.
+        projectObj.getVoteCount
+
+        # Pass up to frontend success message. 
+        messages.success(request, 'Your review was successfully submitted!')
+        return redirect('project', pk=projectObj.id)
 
     context = { 'project': projectObj, 'form': form }
     return render(request, 'projects/single-project.html', context)

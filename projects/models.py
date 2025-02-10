@@ -33,7 +33,24 @@ class Project(models.Model):
     
     # Order the projects model. Adding "-" changes from ascending to descending order. 
     class Meta:
-        ordering = ['-created']
+        ordering = ['-vote_ratio', '-vote_total']
+
+    # Property decorator allows it to run without (), able to run it as a method. 
+    @property
+    def getVoteCount(self):
+        # Grab all reviews
+        reviews = self.review_set.all()
+        # Filter to get all upvotes.
+        upVotes = reviews.filter(value='up').count()
+        totalVotes = reviews.count()
+
+        ratio = (upVotes/totalVotes) * 100
+
+        # Update Project model.
+        self.vote_total = totalVotes
+        self.vote_ratio = ratio
+
+        self.save()
 
 class Review(models.Model):
 
@@ -47,7 +64,7 @@ class Review(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     body = models.TextField(null=True, blank=True)
     value = models.CharField(max_length=200, choices=VOTE_TYPE)
-    created = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
     class Meta:
