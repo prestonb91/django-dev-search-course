@@ -7,6 +7,7 @@ from django.db.models import Q
 # Checks to see if someone is logged in before action.
 from django.contrib.auth.decorators import login_required
 from .utils import searchProjects
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 # Create your views here.
 
@@ -14,7 +15,26 @@ from .utils import searchProjects
 def projects(request): 
     projects, search_query = searchProjects(request)
 
-    context = { 'projects': projects, 'search_query': search_query }
+    page = request.GET.get('page')
+    results = 3
+    paginator = Paginator(projects, results)
+
+    # On page load, if page is an integer, then load first page. 
+    # Except if not an integer in the url, defaults to the first page. 
+    try:
+        projects = paginator.page(page)
+    except PageNotAnInteger:
+        page = 1
+        projects = paginator.page(page)
+    # If user tries to access page that does not exist, default to last page. 
+    except EmptyPage:
+        page = paginator.num_pages
+        projects = paginator.page(page)
+
+    # Getting 3 projects and first page of those 3 projects. 
+    projects = paginator.page(page)
+
+    context = { 'projects': projects, 'search_query': search_query, 'paginator': paginator }
     return render(request, 'projects/projects.html', context)
 
 # id value being called as parameter from project url.

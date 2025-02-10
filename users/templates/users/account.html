@@ -79,11 +79,11 @@
           {% for project in projects %}
           <tr>
             <td class="settings__thumbnail">
-              <a href="{% url 'project' project.id %}"><img src="{{projects.featured_image.url}}" alt="Project Thumbnail" /></a>
+              <a href="{% url 'project' project.id %}"><img src="{{project.featured_image.url}}" alt="Project Thumbnail" /></a>
             </td>
             <td class="settings__tableInfo">
-              <a href="{% url 'project' project.id %}">{{projects.title}}</a>
-              <p>{{projects.description|slice:"150"}}</p>
+              <a href="{% url 'project' project.id %}">{{project.title}}</a>
+              <p>{{project.description|slice:"150"}}</p>
             </td>
             <td class="settings__tableActions">
               <a class="tag tag--pill tag--main settings__btn" href="{% url 'update-project' project.id %}"><i class="im im-edit"></i> Edit</a>

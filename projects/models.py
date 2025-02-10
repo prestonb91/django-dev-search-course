@@ -32,6 +32,10 @@ class Project(models.Model):
     # Python function to refer to Project class and return the title instead of the object uuid.
     def __str__(self):
         return self.title
+    
+    # Order the projects model. Adding "-" changes from ascending to descending order. 
+    class Meta:
+        ordering = ['-created']
 
 class Review(models.Model):
 

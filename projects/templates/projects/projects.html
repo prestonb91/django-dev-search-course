@@ -54,6 +54,16 @@
         {% endfor %}
       </div>
     </section>
+
+    <div class="pagination">
+      <ul class="container" >
+        <!-- .page_range accesses inner page values -->
+        {% for page in paginator.page_range %}
+          <li><a href="?page={{page}}" class="btn page-link">{{page}}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
 </main>
 
 {% endblock content %}
