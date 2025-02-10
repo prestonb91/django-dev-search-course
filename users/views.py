@@ -5,7 +5,7 @@ from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from .forms import CustomUserCreationForm, ProfileForm
+from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
 # Create your views here.
 
@@ -119,3 +119,66 @@ def editAccount(request):
 
     context = {'form': form}
     return render(request, 'users/profile_form.html', context)
+
+@login_required(login_url='login')
+def createSkill(request):
+    # Get logged in user's profile information.
+    profile = request.user.profile
+    form = SkillForm()
+
+    # If post request, process this.
+    if request.method == 'POST':
+        form = SkillForm(request.POST)
+        if form.is_valid():
+            # Gives us instance of object of skills and now we can update the owner. 
+            skill = form.save(commit=False)
+            skill.owner = profile
+            skill.save()
+
+            messages.success(request, 'Skill was added!')
+
+            return redirect('account')
+        else:
+            messages.error(request, 'An error has occured adding the skill.')
+
+    context = {'form': form}
+    return render(request, 'users/skill_form.html', context)
+
+@login_required(login_url='login')
+def updateSkill(request, pk):
+    profile = request.user.profile
+    # Ensures will get the skill only for that owner. 
+    skill = profile.skill_set.get(id=pk)
+    # Prefills the instance of skill that is received to edit. 
+    form = SkillForm(instance=skill)
+
+    if request.method == 'POST':
+        form = SkillForm(request.POST, instance=skill)
+        if form.is_valid():
+            # Don't need to set the owner because skill has already been created and connected with an owner. 
+            form.save()
+
+            messages.success(request, 'Skill was updated!')
+
+            return redirect('account')
+        else:
+            messages.error(request, 'An error has occured updating the skill.')
+
+
+    context = {'form': form}
+    return render(request, 'users/skill_form.html', context)
+
+
+def deleteSkill(request, pk):
+    profile = request.user.profile
+    skill = profile.skill_set.get(id=pk)
+
+    if request.method == 'POST':
+        skill.delete()
+
+        messages.success(request, 'Skill was successfully deleted!')
+
+        return redirect('account')
+
+    context = {'object':skill}
+    return render(request, 'delete_template.html', context)

@@ -41,7 +41,7 @@ def createProject(request):
             # Took the logged in user, the project itself, and resaved it in the profile. 
             project.save()
             # After form is saved, redirects the user to the main projects page. 
-            return redirect('projects')
+            return redirect('account')
 
     context = { 'projectForm': projectForm }
     return render(request, 'projects/project_form.html', context)
@@ -61,7 +61,7 @@ def updateProject(request, pk):
         projectForm = ProjectForm(request.POST, request.FILES, instance=project)
         if projectForm.is_valid():
             projectForm.save()
-            return redirect('project', pk=project.id)
+            return redirect('account')
 
     context = {'projectForm': projectForm}
     return render(request, 'projects/project_form.html', context)
@@ -74,4 +74,4 @@ def deleteProject(request, pk):
         project.delete()
         return redirect('projects')
     context = { 'object': project }
-    return render(request, 'projects/delete_template.html', context)
+    return render(request, 'delete_template.html', context)
