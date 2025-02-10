@@ -39,7 +39,8 @@ def loginUser(request):
         if user is not None:
             # Login function creates a session for that user in the database. Adds cookie. 
             login(request, user)
-            return redirect('profiles')
+            # Send user to next route, what was passed in into the url. 
+            return redirect(request.GET['next'] if 'next' in request.GET else 'account')
         else:
             messages.error(request, 'Username OR password is incorrect')
 
