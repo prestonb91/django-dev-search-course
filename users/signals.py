@@ -2,6 +2,8 @@
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver 
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Profile
 
 ## Anytime the save method is called on Profile, this method is triggered. 
@@ -16,6 +18,18 @@ def createProfile(sender, instance, created, **kwargs):
             user=user,
             username=user.username,
             email=user.email,
+            name=user.first_name,
+        )
+
+        subject = 'Welcome to DevSearch'
+        message = 'Start your DevSearch journey with us today.'
+
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [profile.email],
+            fail_silently=False,
         )
 
 # Without this, when profile gets deleted, user stays. 
