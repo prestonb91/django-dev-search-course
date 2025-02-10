@@ -32,8 +32,15 @@ class Project(models.Model):
         return self.title
     
     # Order the projects model. Adding "-" changes from ascending to descending order. 
+    # Orders in order of list in ordering. 
     class Meta:
-        ordering = ['-vote_ratio', '-vote_total']
+        ordering = ['-vote_ratio', '-vote_total', 'title']
+
+    @property
+    def reviewers(self):
+        # Grab all reviewers. Instead of getting queryset of all, it will be list of ids, flat=True converting it into a true list. 
+        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        return queryset
 
     # Property decorator allows it to run without (), able to run it as a method. 
     @property

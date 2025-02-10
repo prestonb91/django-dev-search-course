@@ -40,6 +40,13 @@
               {{project.vote_ratio}}% Postitive Feedback ({{project.vote_total}} Vote{{project.vote_total|pluralize:"s"}})
             </h5>
 
+            <!-- Want to make sure currently logged in user's id does not exist in list of queryset users to prevent double voting for a project. -->
+            {% if request.user.profile.id in project.reviewers %}
+              <p>You have already submitted your review for this project.</p>
+            <!-- Prevents project owner from voting on own project -->
+            {% elif request.user.profile.id == project.owner %}
+              <p>You cannot review your own work</p>
+            {% elif request.user.is_authenticated %}
             <form class="form" action="{% url 'project' project.id %}" method="POST">
               {% csrf_token %}
               {% for field in form %}
@@ -50,6 +57,10 @@
               {% endfor %}
               <input class="btn btn--sub btn--lg" type="submit" value="Add Review" />
             </form>
+            {% else %}
+            <!-- request.path takes snapshot of current path. If they are not authenticated, lead them to url login and after they login, they return to current page.  -->
+            <a href="{% url 'login' %}?next={{request.path}}">Please login to leave a review.</a>
+            {% endif %}
             
             {% for review in project.review_set.all %}
             {% if review.body %}
