@@ -5,6 +5,7 @@ from .models import Profile
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Q
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
 
 # Create your views here.
@@ -78,8 +79,17 @@ def registerUser(request):
     return render(request, 'users/login_register.html', context)
 
 def profiles(request):
-    profiles = Profile.objects.all()
-    context = { 'profiles': profiles }
+    search_query = ''
+
+    if request.GET.get('search_query'):
+        search_query = request.GET.get('search_query')
+        print('SEARCH:', search_query)
+
+    # icontains makes it case insensitive
+    # If search_query is empty.
+    # Wrapping filter parameters in Q makes it an OR search. 
+    profiles = Profile.objects.filter(Q(name__icontains=search_query) | Q(short_intro__icontains=search_query))
+    context = { 'profiles':profiles, 'search_query':search_query }
     return render(request, 'users/profiles.html', context)
 
 def userProfile(request, pk):
