@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .models import Profile
+from .models import Profile, Skill
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.db.models import Q
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
+from .utils import searchProfiles
 
 # Create your views here.
 
@@ -79,16 +80,11 @@ def registerUser(request):
     return render(request, 'users/login_register.html', context)
 
 def profiles(request):
+    # searchProfiles located in utils. 
+    # Trigger searchProfiles function and returns profile and query set
+    profiles, search_query = searchProfiles(request)
     search_query = ''
 
-    if request.GET.get('search_query'):
-        search_query = request.GET.get('search_query')
-        print('SEARCH:', search_query)
-
-    # icontains makes it case insensitive
-    # If search_query is empty.
-    # Wrapping filter parameters in Q makes it an OR search. 
-    profiles = Profile.objects.filter(Q(name__icontains=search_query) | Q(short_intro__icontains=search_query))
     context = { 'profiles':profiles, 'search_query':search_query }
     return render(request, 'users/profiles.html', context)
 
