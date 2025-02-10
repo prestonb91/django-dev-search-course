@@ -1,22 +1,28 @@
+// To fix issue where if go to different page after searching, the search will be overwritten by page query.
+// This will end up sending 2 values to the backend to search values without overwritting.
 
-//GET SEARCH FORM AND PAGE LINKS
+// Get search form and page links.
 let searchForm = document.getElementById('searchForm')
 let pageLinks = document.getElementsByClassName('page-link')
 
-//ENSURE SEARCH FORM EXISTS
-if (searchForm) {
+// Ensure search form exists. If no search form, does not need to run.
+if(searchForm){
+    // Loops through page links. 
     for (let i = 0; pageLinks.length > i; i++) {
+        // Everytime button is clicked for pageLinks, listen for click. 
         pageLinks[i].addEventListener('click', function (e) {
+            // Default action of going to page being prevented. 
             e.preventDefault()
-
-            //GET THE DATA ATTRIBUTE
+            
+            // Get data attribute in above elements. "this" being the button clicked on.
+            // 1. Get current page we clicked on. 
             let page = this.dataset.page
-
-            //ADD HIDDEN SEARCH INPUT TO FORM
+            
+            // Add hidden search input to form. innerHTML allows to add html content. 
+            // 2. Add in the page value. 
             searchForm.innerHTML += `<input value=${page} name="page" hidden/>`
-
-
-            //SUBMIT FORM
+            
+            // 3. Then submit form.
             searchForm.submit()
         })
     }
