@@ -37,3 +37,26 @@ class Skill(models.Model):
     def __str__(self):
         return str(self.name)
     
+class Message(models.Model):
+    # null=True because people don't need to have an account to send a message, so a sender may not have a profile relationship
+    sender = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True)
+    # Profile model can connect to recipient with related_name="messages", instead of accessing by profiles.messages_set.
+    recipient = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True, related_name="messages")
+    name = models.CharField(max_length=200, null=True, blank=True)
+    email = models.EmailField(max_length=200, null=True, blank=True)
+    subject = models.CharField(max_length=200, null=True, blank=True)
+    body = models.TextField()
+    is_read = models.BooleanField(default=False, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    def __str__(self):
+        return str(self.subject)
+    
+    # Set the ordering of this model data
+    class Meta:
+        ordering = ['is_read', '-created']
+
+
+    
+    
