@@ -12,14 +12,30 @@
             <form class="form" method="POST">
                 {% csrf_token %}
 
-                
-
-                <!-- Input:Text -->
+                <!-- If not authenticated, include your email and name when sending message. -->
+                {% if request.user.is_authenticated == False %}
                 <div class="form__field">
-                    <label for="formInput#text">Text Field: </label>
-                    <input class="input input--text" id="formInput#text" type="text" name="text"
-                        placeholder="Enter text" />
+                    <label for="formInput#text">{{form.name.label}}</label>
+                    {{form.name}}
                 </div>
+
+                <div class="form__field">
+                    <label for="formInput#text">{{form.email.label}}</label>
+                    {{form.email}}
+                </div>
+                {% endif %}
+
+                <!-- If authenticated, just used your logged in info to send email and name.  -->
+                <div class="form__field">
+                    <label for="formInput#text">{{form.subject.label}}</label>
+                    {{form.subject}}
+                </div>
+
+                <div class="form__field">
+                    <label for="formInput#text">{{form.body.label}}</label>
+                    {{form.body}}
+                </div>
+
                 <input class="btn btn--sub btn--lg  my-md" type="submit" value="Submit" />
             </form>
         </div>

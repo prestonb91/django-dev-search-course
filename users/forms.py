@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, Skill
+from .models import Profile, Skill, Message
 
 class CustomUserCreationForm(UserCreationForm):
     # Specifies metadata about the form, like the model it is based on and what fields should be included
@@ -48,7 +48,7 @@ class SkillForm(ModelForm):
 
 class MessageForm(ModelForm):
     class Meta:
-        model = Skill
+        model = Message
         fields = ['name', 'email', 'subject', 'body']
 
     def __init__(self, *args, **kwargs):
