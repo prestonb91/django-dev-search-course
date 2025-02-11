@@ -1,6 +1,10 @@
-from django.http import JsonResponse
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .serializers import ProjectSerializer
+from projects.models import Project
 
 # See all available API routes. 
+@api_view(['GET'])
 def getRoutes(request):
 
     routes = [
@@ -12,5 +16,24 @@ def getRoutes(request):
         {'POST':'api/users/token/refresh'},
     ]
 
-    # safe=False means turn the data into JSON data. 
-    return JsonResponse(routes, safe=False)
+    return Response(routes)
+
+@api_view(['GET'])
+def getProjects(request):
+
+    # Grab all projects. 
+    projects = Project.objects.all()
+    # Takes the projects queryset and serialzies into JSON. 
+    # many=True lets it know it is serializing many objects.
+    serializer = ProjectSerializer(projects, many=True)
+
+    # .data takes out the data.  
+    return Response(serializer.data)
+
+@api_view(['GET'])
+def getProject(request, pk):
+
+    project = Project.objects.get(id=pk)
+    serializer = ProjectSerializer(project, many=False)
+
+    return Response(serializer.data)
