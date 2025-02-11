@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from .models import Profile, Skill
+from .models import Profile, Skill, Message
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
@@ -177,7 +177,7 @@ def updateSkill(request, pk):
     context = {'form': form}
     return render(request, 'users/skill_form.html', context)
 
-
+@login_required(login_url='login')
 def deleteSkill(request, pk):
     profile = request.user.profile
     skill = profile.skill_set.get(id=pk)
@@ -191,3 +191,14 @@ def deleteSkill(request, pk):
 
     context = {'object':skill}
     return render(request, 'delete_template.html', context)
+
+@login_required(login_url='login')
+def inbox(request):
+    # First get currently logged in user. 
+    profile = request.user.profile
+    # Don't need to set get all due to related_name set in message model. 
+    messageRequests = profile.messages.all()
+    unreadCount = messageRequests.filter(is_read=False).count()
+
+    context = {'messageRequests':messageRequests, 'unreadCount':unreadCount}
+    return render(request, 'users/inbox.html', context)
