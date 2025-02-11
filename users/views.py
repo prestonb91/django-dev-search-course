@@ -219,5 +219,29 @@ def viewMessage(request, pk):
 def createMessage(request, pk):
     recipient = Profile.objects.get(id=pk)
     form = MessageForm()
+
+    # If sender does not exist, try getting from profile, if not then set sender as none. 
+    try:
+        sender = request.user.profile
+    except:
+        sender = None
+
+    if request.method == 'POST':
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+
+            # If the sender is logged in, set the name and email with the logged in information
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+            message.save()
+
+            messages.success(request, 'Your message was successfully sent!')
+            # When send someone message, redirect them to their account
+            return redirect('user-profile', pk=recipient.id)
+
     context = {'recipient':recipient, 'form':form}
     return render(request, 'users/message_form.html', context)
