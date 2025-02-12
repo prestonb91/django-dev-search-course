@@ -103,7 +103,7 @@ def updateProject(request, pk):
                 project.tags.add(tag)
             return redirect('account')
 
-    context = {'projectForm': projectForm}
+    context = {'projectForm': projectForm, 'project': project}
     return render(request, 'projects/project_form.html', context)
 
 @login_required(login_url="login")
