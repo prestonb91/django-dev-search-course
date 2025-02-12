@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
 
     'rest_framework',
+    'corsheaders',
+
 ]
 
 REST_FRAMEWORK = {
@@ -103,7 +105,12 @@ MIDDLEWARE = [
     # whitenoise middleware to allow for static files to be served
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'dev-search.urls'
 

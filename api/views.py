@@ -19,7 +19,6 @@ def getRoutes(request):
     return Response(routes)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def getProjects(request):
     # Grab all projects. 
     projects = Project.objects.all()

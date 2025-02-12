@@ -34,9 +34,12 @@ def createProfile(sender, instance, created, **kwargs):
 
 # Without this, when profile gets deleted, user stays. 
 def deleteUser(sender, instance, **kwargs):
-    # Instance here is the profile and get the user (as they are connected in a 1to1 relationship)
-    user = instance.user
-    user.delete()
+    try:
+        # Instance here is the profile and get the user (as they are connected in a 1to1 relationship)
+        user = instance.user
+        user.delete()
+    except:
+        pass
 
 def updateUser(sender, instance, created, **kwargs):
     profile = instance

@@ -8,7 +8,7 @@ import uuid
 class Project(models.Model):
     # Projects to user is many to one relationship, use foreign key to get them to communicate with each other.
     # Won't let migration run unless have null=True.
-    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.CASCADE)
     # Title by default will be required. 
     title = models.CharField(max_length=200)
     # null=True means this data can be created without an initial value. 
@@ -35,6 +35,16 @@ class Project(models.Model):
     # Orders in order of list in ordering. 
     class Meta:
         ordering = ['-vote_ratio', '-vote_total', 'title']
+
+    # Fixes issue where if user deletes featured image, would break page since not found. 
+    @property
+    def imageURL(self):
+        try:
+            # If image doesn't exist, move to next.
+            url = self.featured_image.url
+        except:
+            url = ''
+        return url
 
     @property
     def reviewers(self):

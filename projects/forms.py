@@ -8,7 +8,7 @@ class ProjectForm(ModelForm):
         model = Project
         # __all__ generates a field for every attribute
         # Determines which fields to show in the form. 
-        fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link', 'tags']
+        fields = ['title', 'featured_image', 'description', 'demo_link', 'source_link']
 
         # Widgets allow for modifying classes. 
         widgets = {
