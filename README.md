@@ -1,4 +1,4 @@
-# Dev Search Website made in Django
+# Dev Search 
 
 ## Description
 A website to create account and upload your profile, projects, and skills built with Dennis Ivy's Django course. 
