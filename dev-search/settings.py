@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-u-959gr!bo0+9uszm*0zm-%d0l4e(mhr&t(m&n-19c5vcq=ual
 DEBUG = True
 
 # Set domains that are allowed to access the website. 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'dev-search-a52e21c619b2.herokuapp.com/']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'https://dev-search-a52e21c619b2.herokuapp.com/']
 
 
 # Application definition
